@@ -2,8 +2,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="kustomize_wrapper",
-    version="1.0.0",
+    name="kustforge",
+    version="0.0.1",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     install_requires=[
@@ -19,6 +19,6 @@ setup(
         ],
     },
     python_requires=">=3.7",
-    author="Your Name",
+    author="Allen Sanabria",
     description="Kustomize wrapper with AWS resource resolution and template processing",
 )
