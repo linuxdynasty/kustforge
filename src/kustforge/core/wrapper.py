@@ -1,12 +1,30 @@
 import re
 import os
+import sys
+from pathlib import Path
 from typing import Dict, Any, List
-from aws.session import AWSSessionManager
-from aws.resolver import AWSResourceResolver
-from aws.cache import CachedResourceResolver
-from utils.validation import TemplateValidator
-from utils.rollback import RollbackManager
-from .diff import FileChange
+
+# Add the parent directory to Python path for direct script execution
+parent_dir = str(Path(__file__).resolve().parents[2])
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+
+# Use relative imports when running directly
+if __package__ is None:
+    from kustforge.aws.session import AWSSessionManager
+    from kustforge.aws.resolver import AWSResourceResolver
+    from kustforge.aws.cache import CachedResourceResolver
+    from kustforge.utils.validation import TemplateValidator
+    from kustforge.utils.rollback import RollbackManager
+    from kustforge.core.diff import FileChange
+else:
+    # Use absolute imports when installed as a package
+    from kustforge.aws.session import AWSSessionManager
+    from kustforge.aws.resolver import AWSResourceResolver
+    from kustforge.aws.cache import CachedResourceResolver
+    from kustforge.utils.validation import TemplateValidator
+    from kustforge.utils.rollback import RollbackManager
+    from kustforge.core.diff import FileChange
 
 class KustomizeWrapper:
     """Main class for processing Kustomize templates with AWS integration"""
@@ -89,3 +107,15 @@ class KustomizeWrapper:
             print(f"Error applying changes: {str(e)}")
             self.rollback_manager.restore_manifests()
             return False
+
+    def remove_generated_files(self, changes: List[FileChange]):
+        """Remove the generated files from the processed changes.
+        
+        Args:
+            changes (List[FileChange]): List of file changes from process_files()
+        """
+        import os
+        
+        for change in changes:
+            if os.path.exists(change.output_path):
+                os.remove(change.output_path)
