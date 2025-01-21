@@ -5,9 +5,11 @@ from .session import AWSSessionManager
 from .resources.base import AWSResource
 from .resources.rds import RDSResource
 from .resources.elasticache import ElastiCacheResource
+from .resources.acm import ACMResource
 from .resources.alb import ALBResource
 from .resources.ecr import ECRResource
 from .resources.secrets import SecretsResource
+from .resources.waf import WAFResource
 
 class AWSResourceResolver:
     """
@@ -31,7 +33,9 @@ class AWSResourceResolver:
             'elasticache': ElastiCacheResource,
             'alb': ALBResource,
             'ecr': ECRResource,
-            'secret': SecretsResource
+            'secret': SecretsResource,
+            'waf': WAFResource,
+            'acm': ACMResource,
         }
         
         # Updated pattern to handle aws:role=name format

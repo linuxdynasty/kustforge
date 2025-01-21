@@ -1,10 +1,26 @@
 import os
 import sys
+from pathlib import Path
+
+# Add the src directory to Python path for direct script execution
+src_dir = str(Path(__file__).resolve().parents[2])
+if src_dir not in sys.path:
+    sys.path.insert(0, src_dir)
+
+# Now we can import from kustforge
 import argparse
 from typing import Dict, Optional
-from core.wrapper import KustomizeWrapper
-from core.diff import DiffFormatter
-from utils.validation import TemplateValidator
+
+# Use relative imports when running directly
+if __package__ is None:
+    from core.wrapper import KustomizeWrapper
+    from core.diff import DiffFormatter
+    from utils.validation import TemplateValidator
+else:
+    # Use absolute imports when installed as a package
+    from kustforge.core.wrapper import KustomizeWrapper
+    from kustforge.core.diff import DiffFormatter
+    from kustforge.utils.validation import TemplateValidator
 
 def parse_variables(vars_list: Optional[list] = None) -> Dict[str, str]:
     """

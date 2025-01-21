@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List, Optional
 import difflib
 from colorama import Fore, Style, init
+import os
 
 # Initialize colorama for cross-platform colored output
 init()
@@ -152,13 +153,16 @@ class DiffFormatter:
         Returns:
             A relative path suitable for display
         """
-        try:
-            import os
-            return os.path.relpath(path)
-        except ValueError:
-            # If relpath fails (e.g., cross-device), return the original path
-            return path
-    
+        # Get the current working directory and the absolute path
+        cwd = os.getcwd()
+        abs_path = os.path.abspath(path)
+        
+        # Calculate relative path from current directory
+        rel_path = os.path.relpath(abs_path, cwd)
+        
+        # Convert Windows backslashes to forward slashes for consistency
+        return rel_path.replace(os.sep, '/')
+        
     @classmethod
     def summarize_changes(cls, changes: List[FileChange]) -> str:
         """

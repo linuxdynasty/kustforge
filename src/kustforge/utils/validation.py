@@ -2,9 +2,9 @@ import re
 import yaml
 import subprocess
 from typing import Dict, Any, List, Optional
-from core.diff import FileChange
-from aws.resolver import AWSResourceResolver
-from aws.session import AWSSessionManager
+from kustforge.core.diff import FileChange
+from kustforge.aws.resolver import AWSResourceResolver
+from kustforge.aws.session import AWSSessionManager
 
 class TemplateValidator:
     """Validates processed Kubernetes manifests"""
@@ -23,6 +23,7 @@ class TemplateValidator:
         2. Basic Kubernetes manifest structure
         """
         errors = []
+        yaml_content = None
         
         # Validate YAML structure
         try:
@@ -33,6 +34,7 @@ class TemplateValidator:
                 errors.append("Top-level YAML must be a mapping")
         except yaml.YAMLError as e:
             errors.append(f"Invalid YAML syntax: {str(e)}")
+            return errors  # Return early since we can't validate structure without valid YAML
         
         # Validate basic Kubernetes manifest structure
         if yaml_content and isinstance(yaml_content, dict):

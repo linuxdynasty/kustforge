@@ -15,7 +15,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "kustomize-wrapper=main:main",
+            "kustforge=main:main",
         ],
     },
     python_requires=">=3.7",
